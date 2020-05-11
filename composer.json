@@ -1,0 +1,26 @@
+{
+    "name": "lnch/laravel-bouncer",
+    "description": "Laravel package for controlling permissions and roles for Eloquent models",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tom Lynch",
+            "email": "tom@lnch.co.uk"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "Lnch\\LaravelBouncer\\": "src"
+    },
+    "require-dev": {
+        "orchestra/testbench": "5.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Lnch\\LaravelBouncer\\LaravelBouncerServiceProvider"
+            ]
+        }
+    }
+}
