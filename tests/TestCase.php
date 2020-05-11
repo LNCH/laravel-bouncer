@@ -9,7 +9,8 @@ class TestCase extends \Orchestra\Testbench\TestCase
     public function setUp(): void
     {
         parent::setUp();
-        // additional setup
+
+        $this->withFactories(__DIR__.'/factories');
     }
 
     protected function getPackageProviders($app)
@@ -21,6 +22,10 @@ class TestCase extends \Orchestra\Testbench\TestCase
 
     protected function getEnvironmentSetUp($app)
     {
-        // perform environment setup
+        // import the CreatePermissionsTable class from the migration
+        include_once __DIR__ . '/../database/migrations/create_permissions_table.php.stub';
+
+        // run the up() method of that migration class
+        (new \CreatePermissionsTable)->up();
     }
 }

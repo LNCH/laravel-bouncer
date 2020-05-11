@@ -1,0 +1,12 @@
+User Trait
+    assignPermission()
+    revokePermission()
+    hasPermission()
+    can()
+
+Permission
+    - key
+    - group
+    - label
+    - description
+    - timestamps()
