@@ -1,0 +1,1 @@
+C:37:"PHPUnit\Runner\DefaultTestResultCache":196:{a:2:{s:7:"defects";a:0:{}s:5:"times";a:2:{s:56:"Lnch\LaravelBouncer\Tests\Unit\ExampleTest::true_is_true";d:0.033;s:64:"Lnch\LaravelBouncer\Tests\Feature\ExampleTest::true_is_not_false";d:0.239;}}}

@@ -11,7 +11,14 @@
     ],
     "require": {},
     "autoload": {
-        "Lnch\\LaravelBouncer\\": "src"
+        "psr-4": {
+            "Lnch\\LaravelBouncer\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Lnch\\LaravelBouncer\\Tests\\": "tests"
+        }
     },
     "require-dev": {
         "orchestra/testbench": "5.0",
