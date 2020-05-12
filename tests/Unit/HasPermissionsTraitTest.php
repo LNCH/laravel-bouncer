@@ -188,4 +188,82 @@ class HasPermissionsTraitTest extends TestCase
 
         $this->assertFalse($user->hasPermission(20));
     }
+
+    /** @test */
+    public function can_assign_multiple_permissions_at_once(): void
+    {
+        $user = factory(User::class)->create();
+        $user->assignPermissions(['create_users', 'edit_users', 'delete_users']);
+        $this->assertCount(3, $user->permissions);
+    }
+
+    /** @test */
+    public function can_revoke_multiple_permissions_at_once(): void
+    {
+        $user = factory(User::class)->create();
+        $permissions = factory(Permission::class, 5)->create();
+
+        foreach ($permissions as $permission) {
+            DB::table(config('bouncer.permissions_junction_table_name'))
+                ->insert([
+                    'permission_id' => $permission->id,
+                    'permissions_models_id' => $user->id,
+                    'permissions_models_type' => User::class
+                ]);
+        }
+
+        $user->revokePermissions([
+            $permissions[0]->key,
+            $permissions[1]->key,
+            $permissions[2]->key,
+        ]);
+
+        $this->assertCount(2, $user->permissions);
+    }
+
+    /** @test */
+    public function can_check_if_a_model_has_any_of_an_array_of_permissions(): void
+    {
+        $user = factory(User::class)->create();
+        $permissions = factory(Permission::class, 5)->create();
+
+        foreach ($permissions as $permission) {
+            DB::table(config('bouncer.permissions_junction_table_name'))
+                ->insert([
+                    'permission_id' => $permission->id,
+                    'permissions_models_id' => $user->id,
+                    'permissions_models_type' => User::class
+                ]);
+        }
+
+        $this->assertTrue($user->hasAnyOfPermissions([
+            'invalid_permission',
+            $permissions[2]->key,
+            'another_invalid_permission',
+        ]));
+    }
+
+
+
+    /** @test */
+    public function can_check_if_a_model_has_all_of_an_array_of_permissions(): void
+    {
+        $user = factory(User::class)->create();
+        $permissions = factory(Permission::class, 5)->create();
+
+        foreach ($permissions as $permission) {
+            DB::table(config('bouncer.permissions_junction_table_name'))
+                ->insert([
+                    'permission_id' => $permission->id,
+                    'permissions_models_id' => $user->id,
+                    'permissions_models_type' => User::class
+                ]);
+        }
+
+        $this->assertTrue($user->hasAllOfPermissions([
+            $permissions[2]->key,
+            $permissions[4]->key,
+            $permissions[1]->key,
+        ]));
+    }
 }

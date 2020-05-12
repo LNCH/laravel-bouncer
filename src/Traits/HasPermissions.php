@@ -31,6 +31,13 @@ trait HasPermissions
         $this->refresh();
     }
 
+    public function assignPermissions($permissions = [])
+    {
+        collect($permissions)->each(function ($permission) {
+            $this->assignPermission($permission);
+        });
+    }
+
     public function revokePermission($permission): void
     {
         if (!is_string($permission) && !is_int($permission) && !$permission instanceof Permission) {
@@ -43,6 +50,13 @@ trait HasPermissions
 
         $this->permissions()->detach($permission);
         $this->refresh();
+    }
+
+    public function revokePermissions($permissions = [])
+    {
+        collect($permissions)->each(function ($permission) {
+            $this->revokePermission($permission);
+        });
     }
 
     public function hasPermission($permission): bool
@@ -58,6 +72,28 @@ trait HasPermissions
         }
 
         return false;
+    }
+
+    public function hasAnyOfPermissions($permissions = [])
+    {
+        foreach ($permissions as $permission) {
+            if ($this->hasPermission($permission)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function hasAllOfPermissions($permissions = [])
+    {
+        foreach ($permissions as $permission) {
+            if (!$this->hasPermission($permission)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private function findPermission($permission): ?Permission
