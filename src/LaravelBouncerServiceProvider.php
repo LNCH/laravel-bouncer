@@ -6,6 +6,11 @@ use Illuminate\Support\ServiceProvider;
 
 class LaravelBouncerServiceProvider extends ServiceProvider
 {
+    private $migrations = [
+        'create_permissions_table.php',
+        'create_permissions_models_table.php',
+    ];
+
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/bouncer.php', 'bouncer');
@@ -24,17 +29,23 @@ class LaravelBouncerServiceProvider extends ServiceProvider
             ], 'config');
 
             // Publish migrations
-            $this->publishes([
-                __DIR__.'/../database/migrations/create_permissions_table.php.stub'
-                    => $this->getMigrationFilename('create_permissions_table.php'),
-                __DIR__.'/../database/migrations/create_permissions_models_table.php.stub'
-                    => $this->getMigrationFilename('create_permissions_models_table.php'),
-            ], 'migrations');
+            $this->publishes($this->getMigrationsArray(), 'migrations');
         }
     }
 
-    private function getMigrationFilename($migration)
+    private function getMigrationsArray()
     {
-        return database_path('migrations/'.date('Y_m_d_His', time()).'_'.$migration);
+        $migrationsArray = [];
+
+        foreach ($this->migrations as $key => $migration) {
+            $migrationsArray[__DIR__."/../database/migrations/{$migration}.stub"] = $this->getMigrationFilename($migration, $key);
+        }
+
+        return $migrationsArray;
+    }
+
+    private function getMigrationFilename($migration, $count = 0)
+    {
+        return database_path('migrations/'.date('Y_m_d_His', time() + $count).'_'.$migration);
     }
 }
