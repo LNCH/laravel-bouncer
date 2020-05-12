@@ -4,7 +4,6 @@ namespace Lnch\LaravelBouncer\Traits;
 
 use Lnch\LaravelBouncer\Exceptions\InvalidPermissionException;
 use Lnch\LaravelBouncer\Models\Permission;
-use Mockery\Exception;
 
 trait HasPermissions
 {
@@ -44,12 +43,12 @@ trait HasPermissions
         $this->permissions()->detach($permission);
     }
 
-    public function hasPermission($permission)
+    public function hasPermission($permission): bool
     {
         if (!$permission instanceof Permission) {
             $permission = is_int($permission)
                 ? Permission::find($permission)
-                : Permission::where('key', $permission)->first();
+                : Permission::where(['key' => $permission])->first();
         }
 
         if ($permission) {
