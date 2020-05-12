@@ -28,6 +28,7 @@ trait HasPermissions
         }
 
         $this->permissions()->attach($permission);
+        $this->refresh();
     }
 
     public function revokePermission($permission): void
@@ -41,6 +42,7 @@ trait HasPermissions
         }
 
         $this->permissions()->detach($permission);
+        $this->refresh();
     }
 
     public function hasPermission($permission): bool
