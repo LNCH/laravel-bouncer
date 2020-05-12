@@ -16,17 +16,32 @@ trait HasPermissions
 
     public function assignPermission($permission): void
     {
-        if (is_int($permission) || is_string($permission)) {
-            $permission = is_int($permission)
-                ? Permission::findOrFail($permission)
-                : Permission::create(['key' => $permission]);
-        }
-
-        if ($permission instanceof Permission) {
-            $this->permissions()->attach($permission);
-        } else {
+        if (!is_string($permission) && !is_int($permission) && !$permission instanceof Permission) {
             throw new InvalidPermissionException();
         }
+
+        if (is_int($permission) || is_string($permission)) {
+            $permission = $this->findPermission($permission) ?? $permission;
+        }
+
+        if (is_string($permission)) {
+            $permission = $this->createPermission($permission);
+        }
+
+        $this->permissions()->attach($permission);
+    }
+
+    public function revokePermission($permission): void
+    {
+        if (!is_string($permission) && !is_int($permission) && !$permission instanceof Permission) {
+            throw new InvalidPermissionException();
+        }
+
+        if (is_int($permission) || is_string($permission)) {
+            $permission = $this->findPermission($permission) ?? $permission;
+        }
+
+        $this->permissions()->detach($permission);
     }
 
     public function hasPermission($permission)
@@ -42,5 +57,17 @@ trait HasPermissions
         }
 
         return false;
+    }
+
+    private function findPermission($permission): ?Permission
+    {
+        return is_int($permission)
+            ? Permission::find($permission)
+            : Permission::where(['key' => $permission])->first();
+    }
+
+    private function createPermission($permission): ?Permission
+    {
+        return Permission::create(['key' => $permission]);
     }
 }

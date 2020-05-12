@@ -2,33 +2,38 @@
 
 namespace Lnch\LaravelBouncer\Tests\Feature;
 
-use Illuminate\Support\Facades\Gate;
-use Lnch\LaravelBouncer\Models\Permission;
+use Lnch\LaravelBouncer\LaravelBouncerFacade;
 use Lnch\LaravelBouncer\Tests\TestCase;
-use Lnch\LaravelBouncer\Tests\User;
 
 class AuthorisationTest extends TestCase
 {
-    private $user;
-    private $permission;
-
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->user = factory(User::class)->create();
-        $this->permission = factory(Permission::class)->create(['key' => 'create_users']);
-        $this->user->assignPermission($this->permission);
-        $this->be($this->user);
+        LaravelBouncerFacade::registerGateChecks();
     }
 
     /** @test */
     public function a_permission_passes_a_gate_check_with_the_can_method(): void
     {
-        Gate::define($this->permission->key, function ($user) {
-            return $user->hasPermission($this->permission);
-        });
+        $this->assertTrue($this->user->can($this->permission->key));
+    }
 
-        $this->assertTrue($this->user->can('create_users'));
+    /** @test */
+    public function a_permission_fails_a_gate_check_with_the_can_method(): void
+    {
+        $this->assertFalse($this->user->can('invalid_permission'));
+    }
+
+    /** @test */
+    public function a_permission_returns_false_from_a_gate_check_with_the_cannot_method(): void
+    {
+        $this->assertFalse($this->user->cannot($this->permission->key));
+    }
+
+    /** @test */
+    public function a_permission_returns_true_from_a_gate_check_with_the_cannot_method(): void
+    {
+        $this->assertTrue($this->user->cannot('invalid_permission'));
     }
 }

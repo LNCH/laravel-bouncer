@@ -3,15 +3,25 @@
 namespace Lnch\LaravelBouncer\Tests;
 
 use Lnch\LaravelBouncer\LaravelBouncerServiceProvider;
+use Lnch\LaravelBouncer\Models\Permission;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
+    protected $user;
+    protected $permission;
+
     public function setUp(): void
     {
         parent::setUp();
 
         // Load in factories for use in the tests
         $this->withFactories(__DIR__.'/factories');
+
+        // Set up a base user and permission to test Gate
+        $this->user = factory(User::class)->create();
+        $this->permission = factory(Permission::class)->create(['key' => 'create_users']);
+        $this->user->assignPermission($this->permission);
+        $this->be($this->user);
     }
 
     protected function getPackageProviders($app)

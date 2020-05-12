@@ -2,21 +2,22 @@
 
 namespace Lnch\LaravelBouncer;
 
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
-use Lnch\LaravelBouncer\Models\Permission;
 
 class LaravelBouncerServiceProvider extends ServiceProvider
 {
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/bouncer.php', 'bouncer');
+
+        $this->app->bind('laravel-bouncer', function($app) {
+            return new LaravelBouncer();
+        });
     }
 
     public function boot()
     {
         if ($this->app->runningInConsole()) {
-
             // Publish config file
             $this->publishes([
                 __DIR__.'/../config/bouncer.php' => config_path('bouncer.php'),
@@ -29,7 +30,6 @@ class LaravelBouncerServiceProvider extends ServiceProvider
                 __DIR__.'/../database/migrations/create_permissions_models_table.php.stub'
                     => $this->getMigrationFilename('create_permissions_models_table.php'),
             ], 'migrations');
-
         }
     }
 
