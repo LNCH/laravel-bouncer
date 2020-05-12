@@ -35,7 +35,7 @@ class LaravelBouncerServiceProvider extends ServiceProvider
         }
     }
 
-    private function getMigrationsArray()
+    private function getMigrationsArray(): array
     {
         $migrationsArray = [];
 
@@ -46,7 +46,7 @@ class LaravelBouncerServiceProvider extends ServiceProvider
         return $migrationsArray;
     }
 
-    private function getMigrationFilename($migration, $count = 0)
+    private function getMigrationFilename($migration, $count = 0): string
     {
         return database_path('migrations/'.date('Y_m_d_His', time() + $count).'_'.$migration);
     }
