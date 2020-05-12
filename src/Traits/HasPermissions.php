@@ -2,6 +2,7 @@
 
 namespace Lnch\LaravelBouncer\Traits;
 
+use Illuminate\Database\Eloquent\Collection;
 use Lnch\LaravelBouncer\Exceptions\InvalidPermissionException;
 use Lnch\LaravelBouncer\Models\Permission;
 
@@ -68,7 +69,7 @@ trait HasPermissions
         }
 
         if ($permission) {
-            return $this->permissions->contains($permission);
+            return $this->retrieveAllPermissions()->contains($permission);
         }
 
         return false;
@@ -94,6 +95,12 @@ trait HasPermissions
         }
 
         return true;
+    }
+
+    public function retrieveAllPermissions(): Collection
+    {
+        $corePermissions = $this->permissions;
+        return $corePermissions;
     }
 
     private function findPermission($permission): ?Permission
