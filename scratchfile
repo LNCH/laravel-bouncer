@@ -2,7 +2,6 @@ User Trait
     assignPermission()
     revokePermission()
     hasPermission()
-    can()
 
 Permission
     - key
@@ -10,3 +9,5 @@ Permission
     - label
     - description
     - timestamps()
+
+Gate checks for permissions from User

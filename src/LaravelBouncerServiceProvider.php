@@ -2,8 +2,9 @@
 
 namespace Lnch\LaravelBouncer;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
+use Lnch\LaravelBouncer\Models\Permission;
 
 class LaravelBouncerServiceProvider extends ServiceProvider
 {
@@ -14,9 +15,6 @@ class LaravelBouncerServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        // Register the model factories
-//        $this->app->make(Factory::class)->load(__DIR__.'/../database/factories');
-
         if ($this->app->runningInConsole()) {
 
             // Publish config file
@@ -28,6 +26,8 @@ class LaravelBouncerServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../database/migrations/create_permissions_table.php.stub'
                     => $this->getMigrationFilename('create_permissions_table.php'),
+                __DIR__.'/../database/migrations/create_permissions_models_table.php.stub'
+                    => $this->getMigrationFilename('create_permissions_models_table.php'),
             ], 'migrations');
 
         }
