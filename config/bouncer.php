@@ -2,6 +2,6 @@
 
 return [
 
-    'permissions_table_name' => 'permissions',
+    'permissions_table_name' => 'lnch_permissions',
 
 ];

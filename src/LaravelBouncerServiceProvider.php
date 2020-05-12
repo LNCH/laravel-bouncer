@@ -9,7 +9,7 @@ class LaravelBouncerServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/bouncer.php', 'laravel-bouncer');
+        $this->mergeConfigFrom(__DIR__.'/../config/bouncer.php', 'bouncer');
     }
 
     public function boot()
