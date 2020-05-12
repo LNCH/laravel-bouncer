@@ -15,8 +15,6 @@ class LaravelBouncerServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/bouncer.php', 'bouncer');
 
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-
         $this->app->bind('laravel-bouncer', function($app) {
             return new LaravelBouncer();
         });
@@ -24,6 +22,8 @@ class LaravelBouncerServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+
         if ($this->app->runningInConsole()) {
             // Publish config file
             $this->publishes([
