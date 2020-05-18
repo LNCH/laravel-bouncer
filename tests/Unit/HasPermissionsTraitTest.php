@@ -243,8 +243,6 @@ class HasPermissionsTraitTest extends TestCase
         ]));
     }
 
-
-
     /** @test */
     public function can_check_if_a_model_has_all_of_an_array_of_permissions(): void
     {
